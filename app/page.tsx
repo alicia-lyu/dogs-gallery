@@ -1,10 +1,18 @@
 import Image from 'next/image'
 import styles from './page.module.css'
+import Gallery from './gallery'
 
-export default function Home() {
+export default async function Home() {
+  const response = await fetch("https://dog.ceo/api/breeds/list/all")
+  const data = await response.json()
+  const breeds = data.message ?? {}
+  console.log(breeds)
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
+      <h1 className={styles.center}>Find your favorite breed!</h1>
+      <Gallery breeds={breeds} />
+      {/* <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
           <code className={styles.code}>app/page.tsx</code>
@@ -89,7 +97,7 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
-      </div>
+      </div> */}
     </main>
   )
 }
