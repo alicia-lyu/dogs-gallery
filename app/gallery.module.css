@@ -1,3 +1,7 @@
 .subBreed {
     margin-left: 2em;
 }
+
+.breed {
+    position: relative;
+}

@@ -10,7 +10,7 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.center}>Find your favorite breed!</h1>
+      <h1 className={styles.center}>Find your favorite breeds!</h1>
       <Gallery breeds={breeds} />
       {/* <div className={styles.description}>
         <p>
