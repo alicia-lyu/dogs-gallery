@@ -1,18 +1,27 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import pageStyles from "./page.module.css"
 import galleryStyles from "./gallery.module.css"
 import { BiSolidDog } from "react-icons/bi"
 import Image from "next/image"
+import { SelectedContext } from "./context"
 
 export default function Gallery({ breeds }: { breeds: object }) {
-    const [selected, setSelected] = useState<string[]>([""])
+    const {selected, setSelected} = useContext(SelectedContext)
+
     function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
         const target = event.currentTarget as HTMLAnchorElement
         const breed = target.dataset.breed;
-        breed && setSelected(previous => [...previous, breed])
+        if (breed) {
+            if (selected.includes(breed)) {
+                setSelected(selected.filter((selectedBreed) => selectedBreed !== breed))
+            } else {
+                setSelected([...selected, breed])
+            }
+        }
     }
+
     return <div className={pageStyles.grid}>
         {Object.entries(breeds).map(([breed, subBreeds]) => {
             return (
