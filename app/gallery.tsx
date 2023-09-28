@@ -2,22 +2,29 @@
 
 import { useContext } from "react"
 import pageStyles from "./page.module.css"
-import galleryStyles from "@/app/gallery.module.css"
 import { SelectedContext } from "./context"
 import BreedCard from "@/components/breedCard"
 
 export default function Gallery({ breeds }: { breeds: { [breed: string]: string[] } }) {
     const { selected, setSelected } = useContext(SelectedContext)
 
-    function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
-        const target = event.currentTarget as HTMLAnchorElement
+    function handleClick(event: React.MouseEvent<HTMLDivElement>) {
+        console.log("handleClick Gallery")
+        const target = event.currentTarget as HTMLDivElement
         const breed = target.dataset.breed;
         if (breed) {
             if (Object.keys(selected).includes(breed)) {
-                const { [breed]: _, ...rest } = selected
-                setSelected(rest)
+                setSelected(prev => {
+                    const { [breed]: _, ...rest } = prev
+                    return rest
+                })
             } else {
-                setSelected({ ...selected, [breed]: breeds[breed] })
+                setSelected(prev => {
+                    return {
+                        ...prev,
+                        [breed]: breeds[breed]
+                    }
+                })
             }
             console.log(selected)
         }
@@ -25,9 +32,13 @@ export default function Gallery({ breeds }: { breeds: { [breed: string]: string[
 
     return <div className={pageStyles.grid}>
         {Object.entries(breeds).map(([breed, subBreeds]) => {
-            return <a key={breed} className={`${pageStyles.card} ${galleryStyles.breedCard}`} data-breed={breed} onClick={handleClick}>
-                <BreedCard key={breed} breed={breed} subBreeds={subBreeds} display={Object.keys(selected).includes(breed)} />
-            </a>
+            return <BreedCard
+                key={breed}
+                breed={breed}
+                subBreeds={subBreeds}
+                checked={Object.keys(selected).includes(breed)}
+                handleClick={handleClick}
+            />
         })}
     </div>
 }

@@ -5,6 +5,7 @@
 .breedCard {
     color: #000;
     text-decoration: none;
+    margin: 0.5em;
 }
 
 .breedCard > h2 {
@@ -19,3 +20,10 @@
     margin: auto;
 }
 
+.cardTitle > input {
+    margin-right: 0.5em;
+}
+
+.subBreed {
+    list-style-type: none;
+}
