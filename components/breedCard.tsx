@@ -45,9 +45,19 @@ export default function BreedCard({ breed, subBreeds }: {
     </Card>
 }
 
+const IMAGE_NOT_AVAILABLE_URL = "https://via.placeholder.com/500x300.png?text=Image+not+found"
+
 function DogImage({ breed }: { breed: string }) {
     const [breedImages, setBreedImages] = useState<string[]>([])
-    const breedImage = useMemo(() => breedImages[0], [breedImages])
+    const [breedImageIndex, setBreedImageIndex] = useState<number>(0)
+    const breedImage = useMemo(() => {
+        if (breedImages.length > 0 && breedImageIndex < breedImages.length) {
+            return breedImages[breedImageIndex]
+        } else {
+            return IMAGE_NOT_AVAILABLE_URL
+        }
+    }, [breedImages, breedImageIndex])
+
     useEffect(() => {
         fetch(`http://localhost:3000/api/${breed}`).then(response => {
             response.json().then(data => {
@@ -55,6 +65,13 @@ function DogImage({ breed }: { breed: string }) {
             })
         })
     }, [breed])
+
+    function handleLoadingError(event: React.SyntheticEvent<HTMLImageElement, Event>) {
+        console.error("Loading error with image", breed, breedImageIndex, breedImage)
+        setBreedImageIndex(prev => (prev + 1))
+        // if index > length, then set index to larger than length, so IMAGE_NOT_AVAILABLE_URL will be assigned
+    }
+
     if (breedImage) {
         return <Card.Img
             as={Image}
@@ -69,6 +86,8 @@ function DogImage({ breed }: { breed: string }) {
             height={300}
             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
             placeholder="blur"
+            loading="lazy"
+            onError={handleLoadingError}
         />
         // width and height are only placeholders, the image will be resized to fit the container
     } else {
