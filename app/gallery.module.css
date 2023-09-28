@@ -2,6 +2,16 @@
     margin-left: 2em;
 }
 
-.breed {
-    position: relative;
+.breedCard {
+    color: #000;
+    text-decoration: none;
 }
+
+.imageContainer {
+    width: 100%;
+}
+
+.spinner {
+    margin: auto;
+}
+
