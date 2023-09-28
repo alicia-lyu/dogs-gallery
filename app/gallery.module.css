@@ -7,6 +7,10 @@
     text-decoration: none;
 }
 
+.breedCard > h2 {
+    word-wrap: break-word;
+}
+
 .imageContainer {
     width: 100%;
 }
