@@ -2,16 +2,20 @@
 
 import { createContext, useState } from "react"
 
+interface SelectedType {
+    [key: string]: string[]
+}
+
 interface SelectedContextType {
-    selected: string[]
-    setSelected: React.Dispatch<React.SetStateAction<string[]>>
+    selected: SelectedType,
+    setSelected: React.Dispatch<React.SetStateAction<SelectedType>>
 }
 
 export const SelectedContext = createContext<SelectedContextType>({} as SelectedContextType)
 
 export function ContextProvider({ children }: { children: React.ReactNode }) {
-    const [selected, setSelected] = useState<string[]>([""])
-    return <SelectedContext.Provider value={{selected, setSelected}}>
+    const [selected, setSelected] = useState<SelectedType>({})
+    return <SelectedContext.Provider value={{ selected, setSelected }}>
         {children}
     </SelectedContext.Provider>
 }

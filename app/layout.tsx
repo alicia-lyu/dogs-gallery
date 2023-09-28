@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import Header from './header';
+import { ContextProvider } from './context';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,8 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
+        <ContextProvider>
+          <Header />
+          {children}
+        </ContextProvider>
       </body>
     </html>
   )
