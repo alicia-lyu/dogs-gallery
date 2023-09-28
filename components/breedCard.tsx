@@ -6,8 +6,29 @@ import Image from "next/image"
 import { useContext, useEffect, useMemo, useState } from "react"
 import { Card } from "react-bootstrap"
 
-export default function BreedCard({ breed, subBreeds, checked, handleClick }: { breed: string, subBreeds: string[], checked: boolean, handleClick: (event: React.MouseEvent<HTMLDivElement>) => void }) {
-    
+export default function BreedCard({ breed, subBreeds }: {
+    breed: string,
+    subBreeds: string[],
+}) {
+    const { selected, setSelected } = useContext(SelectedContext)
+
+    function handleClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (Object.keys(selected).includes(breed)) {
+            setSelected(prev => {
+                const { [breed]: _, ...rest } = prev
+                return rest
+            })
+        } else {
+            setSelected(prev => {
+                return {
+                    ...prev,
+                    [breed]: subBreeds
+                }
+            })
+        }
+        console.log(selected)
+    }
+
     function handleCardClick(event: React.MouseEvent<HTMLDivElement>) {
         subBreeds.length === 0 && handleClick(event)
     }
@@ -16,7 +37,7 @@ export default function BreedCard({ breed, subBreeds, checked, handleClick }: { 
         <DogImage breed={breed} />
         <Card.Body>
             <Card.Title className={galleryStyles.cardTitle} onClick={handleClick} data-breed={breed}>
-                <input type="checkbox" checked={checked} readOnly/>
+                <input type="checkbox" checked={Object.keys(selected).includes(breed)} readOnly />
                 {breed}
             </Card.Title>
             <SubBreeds breed={breed} subBreeds={subBreeds} />
