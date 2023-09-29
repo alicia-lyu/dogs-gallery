@@ -29,10 +29,6 @@ function FavoriteBreed({ breed, subBreeds }: {
             </h2>
             {subBreeds.map(subBreed => {
                 return <div key={subBreed} className={styles.subBreedBlock}>
-                    <h3 className={`${styles.subBreed}`}>
-                        <span>{subBreed}</span>
-                        <FiRefreshCcw />
-                    </h3>
                     <BreedImages
                         breed={breed}
                         subBreed={subBreed}
@@ -42,10 +38,6 @@ function FavoriteBreed({ breed, subBreeds }: {
         </Container>
     } else {
         return <Container>
-            <h2 className={`${styles.breed}`}>
-                <span>{breed}</span>
-                <FiRefreshCcw />
-            </h2>
             <BreedImages
                 breed={breed}
             />
@@ -87,33 +79,50 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
         }
     }
 
+    const Title = () => {
+        if (subBreed) {
+            return <h3 className={`${styles.subBreed}`}>
+                <span>{subBreed}</span>
+                <FiRefreshCcw />
+            </h3>
+        } else {
+            return <h2 className={`${styles.breed}`}>
+                <span>{breed}</span>
+                <FiRefreshCcw />
+            </h2>
+        }
+    }
+
     if (showingImages.length === 0) {
         return <p>No images available</p>
     } else {
 
-        return (<Row className={styles.images}>
-            {
-                showingImages.map((image, index) => {
-                    return <Col sm={6} lg={3} key={image} className={styles.image}>
-                        <Image
-                            src={image}
-                            alt={`${breed} image`}
-                            sizes="100vw"
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                            }}
-                            width={100}
-                            height={100}
-                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
-                            placeholder="blur"
-                            loading="lazy"
-                            data-index={index}
-                            onError={handleLoadingError}
-                        />
-                    </Col>
-                })
-            }
-        </Row>)
+        return (<>
+            <Title />
+            < Row className={styles.images} >
+                {
+                    showingImages.map((image, index) => {
+                        return <Col sm={6} lg={3} key={image} className={styles.image}>
+                            <Image
+                                src={image}
+                                alt={`${breed} image`}
+                                sizes="100vw"
+                                style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                }}
+                                width={100}
+                                height={100}
+                                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
+                                placeholder="blur"
+                                loading="lazy"
+                                data-index={index}
+                                onError={handleLoadingError}
+                            />
+                        </Col>
+                    })
+                }
+            </Row >
+        </>)
     }
 }
