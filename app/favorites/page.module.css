@@ -1,3 +1,7 @@
 .breed > * {
     margin-right: 0.5em;
 }
+
+.image {
+    padding: 0.5em;
+}

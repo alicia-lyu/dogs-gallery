@@ -6,7 +6,7 @@ import appStyles from "../page.module.css";
 import styles from "./page.module.css"
 import Image from "next/image";
 import { FiRefreshCcw } from 'react-icons/fi';
-import { Container } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
 
 export default function Favorites() {
     const { selected, setSelected } = useContext(SelectedContext)
@@ -38,14 +38,14 @@ function FavoriteBreed({ breed, subBreeds }: {
     if (subBreeds.length > 0) {
 
     } else {
-        return <div>
-            <h2 className={`${styles.breed} ${appStyles.center}`}>
+        return <Container>
+            <h2 className={`${styles.breed}`}>
                 <span>{breed}</span>
                 <FiRefreshCcw />
             </h2>
-            <div className={appStyles.grid}>
+            <Row>
                 {breedImages.slice(showingImageRange[0], showingImageRange[1]).map(image => {
-                    return <div className={appStyles.card} key={breed}>
+                    return <Col sm={6} lg={3} key={breed} className={styles.image}>
                         <Image
                             src={image}
                             alt={breed}
@@ -61,9 +61,9 @@ function FavoriteBreed({ breed, subBreeds }: {
                             loading="lazy"
                             onError={handleLoadingError}
                         />
-                    </div>
+                    </Col>
                 })}
-            </div>
-        </div>
+            </Row>
+        </Container>
     }
 }
