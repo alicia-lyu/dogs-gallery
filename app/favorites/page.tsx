@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { memo, useContext, useEffect, useMemo, useState } from "react";
 import { SelectedContext } from "../context";
 import appStyles from "../page.module.css";
 import styles from "./page.module.css"
@@ -46,11 +46,11 @@ function FavoriteBreed({ breed, subBreeds }: {
 }
 
 function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) {
-    const [showingImageRange, setShowingImageRange] = useState<number[]>([0, 4])
+    const [showingImageStart, setShowingImageStart] = useState<number>(0)
     const [breedImages, setBreedImages] = useState<string[]>([])
     const showingImages = useMemo(() => {
-        return breedImages.slice(showingImageRange[0], showingImageRange[1])
-    }, [breedImages, showingImageRange])
+        return breedImages.slice(showingImageStart, showingImageStart + 4)
+    }, [breedImages, showingImageStart])
 
     useEffect(() => {
         if (subBreed === undefined) {
@@ -72,26 +72,32 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
         const target = event.target as HTMLImageElement
         if (target.dataset.index) {
             const index = parseInt(target.dataset.index)
-            console.log("Loading error in favorites page with image", breed, index + showingImageRange[0], "Igoring...")
+            console.log("Loading error in favorites page with image", breed, index + showingImageStart, "Igoring...")
             setBreedImages(prev => {
-                return prev.filter((image, i) => i !== index + showingImageRange[0])
+                return prev.filter((image, i) => i !== index + showingImageStart)
             })
         }
     }
 
-    const Title = () => {
+    function handleRefresh() {
+        setShowingImageStart(prev => {
+            return (prev + 4) % breedImages.length
+        })
+    }
+
+    const Title = memo(function Title() {
         if (subBreed) {
             return <h3 className={`${styles.subBreed}`}>
                 <span>{subBreed}</span>
-                <FiRefreshCcw />
+                <a href="#" onClick={handleRefresh}><FiRefreshCcw/></a>
             </h3>
         } else {
             return <h2 className={`${styles.breed}`}>
                 <span>{breed}</span>
-                <FiRefreshCcw />
+                <a href="#" onClick={handleRefresh}><FiRefreshCcw/></a>
             </h2>
         }
-    }
+    })
 
     if (showingImages.length === 0) {
         return <p>No images available</p>
