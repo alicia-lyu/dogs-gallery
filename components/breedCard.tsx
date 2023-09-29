@@ -45,7 +45,8 @@ export default function BreedCard({ breed, subBreeds }: {
     </Card>
 }
 
-const IMAGE_NOT_AVAILABLE_URL = "https://via.placeholder.com/500x300.png?text=Image+not+found"
+const IMAGE_NOT_FOUND_URL = "https://via.placeholder.com/500x300.png?text=Image+not+found"
+const IMAGE_LOADING_URL = "https://via.placeholder.com/500x300.png?text=Image+loading"
 
 function DogImage({ breed }: { breed: string }) {
     const [breedImages, setBreedImages] = useState<string[]>([])
@@ -53,8 +54,10 @@ function DogImage({ breed }: { breed: string }) {
     const breedImage = useMemo(() => {
         if (breedImages.length > 0 && breedImageIndex < breedImages.length) {
             return breedImages[breedImageIndex]
+        } else if (breedImages.length === 0) {
+            return IMAGE_LOADING_URL
         } else {
-            return IMAGE_NOT_AVAILABLE_URL
+            return IMAGE_NOT_FOUND_URL
         }
     }, [breedImages, breedImageIndex])
 
@@ -67,7 +70,7 @@ function DogImage({ breed }: { breed: string }) {
     }, [breed])
 
     function handleLoadingError(event: React.SyntheticEvent<HTMLImageElement, Event>) {
-        console.error("Loading error with image", breed, breedImageIndex, breedImage)
+        console.log("Loading error with image", breed, breedImageIndex, breedImage, "Trying the next one...")
         setBreedImageIndex(prev => (prev + 1))
         // if index > length, then set index to larger than length, so IMAGE_NOT_AVAILABLE_URL will be assigned
     }

@@ -9,7 +9,7 @@ export default function Header() {
             <Navbar.Brand as={Link} href="/">Dog Breeds</Navbar.Brand>
             <Nav>
                 <Nav.Link as={Link} href="/">Gallery</Nav.Link>
-                <Nav.Link as={Link} href="/wishlist">Wish List</Nav.Link>
+                <Nav.Link as={Link} href="/favorites">Favorites</Nav.Link>
             </Nav>
         </Container>
     </Navbar>
