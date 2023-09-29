@@ -18,12 +18,17 @@ export default function Favorites() {
     </main>
 }
 
+interface SubBreedsImages {
+    [subBreed: string]: string[]
+}
+
 function FavoriteBreed({ breed, subBreeds }: {
     breed: string,
     subBreeds: string[],
 }) {
     const [breedImages, setBreedImages] = useState<string[]>([])
-    
+    const [subBreedsImages, setSubBreedImages] = useState<SubBreedsImages>({})
+
     useEffect(() => {
         fetch(`http://localhost:3000/api/${breed}`).then(response => {
             response.json().then(data => {
@@ -37,18 +42,24 @@ function FavoriteBreed({ breed, subBreeds }: {
         const target = event.target as HTMLImageElement
         if (target.dataset.index) {
             const index = parseInt(target.dataset.index)
-            console.log("Loading error in favorites page with image", breed, index+showingImageRange[0], "Igoring...")
+            console.log("Loading error in favorites page with image", breed, index + showingImageRange[0], "Igoring...")
             setBreedImages(prev => {
-                return prev.filter((image, i) => i !== index+showingImageRange[0])
+                return prev.filter((image, i) => i !== index + showingImageRange[0])
             })
         }
     }
 
     if (subBreeds.length > 0) {
-        <Container>
+        return <Container>
             <h2 className={`${styles.breed}`}>
                 <span>{breed}</span>
             </h2>
+            {subBreeds.map(subBreed => {
+                return <h3 className={`${styles.breed}`} key={subBreed}>
+                    <span>{subBreed}</span>
+                    <FiRefreshCcw />
+                </h3>
+            })}
         </Container>
     } else {
         return <Container>
@@ -57,27 +68,39 @@ function FavoriteBreed({ breed, subBreeds }: {
                 <FiRefreshCcw />
             </h2>
             <Row>
-                {breedImages.slice(showingImageRange[0], showingImageRange[1]).map((image, index) => {
-                    return <Col sm={6} lg={3} key={image} className={styles.image}>
-                        <Image
-                            src={image}
-                            alt={breed}
-                            sizes="100vw"
-                            style={{
-                                width: '100%',
-                                height: 'auto',
-                            }}
-                            width={100}
-                            height={100}
-                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
-                            placeholder="blur"
-                            loading="lazy"
-                            data-index={index}
-                            onError={handleLoadingError}
-                        />
-                    </Col>
-                })}
+                <BreedImages
+                    images={breedImages.slice(showingImageRange[0], showingImageRange[1])}
+                    breed={breed}
+                    handleLoadingError={handleLoadingError}
+                />
             </Row>
         </Container>
     }
+}
+
+function BreedImages({ images, breed, handleLoadingError }: { images: string[], breed: string, handleLoadingError: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void }) {
+    return (<>
+        {
+            images.map((image, index) => {
+                return <Col sm={6} lg={3} key={image} className={styles.image}>
+                    <Image
+                        src={image}
+                        alt={`${breed} image`}
+                        sizes="100vw"
+                        style={{
+                            width: '100%',
+                            height: 'auto',
+                        }}
+                        width={100}
+                        height={100}
+                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
+                        placeholder="blur"
+                        loading="lazy"
+                        data-index={index}
+                        onError={handleLoadingError}
+                    />
+                </Col>
+            })
+        }
+    </>)
 }
