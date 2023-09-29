@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { SelectedContext } from "../context";
 import appStyles from "../page.module.css";
 import styles from "./page.module.css"
@@ -56,6 +56,9 @@ function FavoriteBreed({ breed, subBreeds }: {
 function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) {
     const [showingImageRange, setShowingImageRange] = useState<number[]>([0, 4])
     const [breedImages, setBreedImages] = useState<string[]>([])
+    const showingImages = useMemo(() => {
+        return breedImages.slice(showingImageRange[0], showingImageRange[1])
+    }, [breedImages, showingImageRange])
 
     useEffect(() => {
         if (subBreed === undefined) {
@@ -84,28 +87,33 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
         }
     }
 
-    return (<Row className={styles.images}>
-        {
-            breedImages.slice(showingImageRange[0], showingImageRange[1]).map((image, index) => {
-                return <Col sm={6} lg={3} key={image} className={styles.image}>
-                    <Image
-                        src={image}
-                        alt={`${breed} image`}
-                        sizes="100vw"
-                        style={{
-                            width: '100%',
-                            height: 'auto',
-                        }}
-                        width={100}
-                        height={100}
-                        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
-                        placeholder="blur"
-                        loading="lazy"
-                        data-index={index}
-                        onError={handleLoadingError}
-                    />
-                </Col>
-            })
-        }
-    </Row>)
+    if (showingImages.length === 0) {
+        return <p>No images available</p>
+    } else {
+
+        return (<Row className={styles.images}>
+            {
+                showingImages.map((image, index) => {
+                    return <Col sm={6} lg={3} key={image} className={styles.image}>
+                        <Image
+                            src={image}
+                            alt={`${breed} image`}
+                            sizes="100vw"
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                            }}
+                            width={100}
+                            height={100}
+                            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
+                            placeholder="blur"
+                            loading="lazy"
+                            data-index={index}
+                            onError={handleLoadingError}
+                        />
+                    </Col>
+                })
+            }
+        </Row>)
+    }
 }
