@@ -50,6 +50,7 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
     const [breedImages, setBreedImages] = useState<string[]>([])
     const showingImages = useMemo(() => {
         return breedImages.slice(showingImageStart, showingImageStart + 4)
+        // showingImageStart + 4 can be larger than breedImages.length
     }, [breedImages, showingImageStart])
 
     useEffect(() => {
@@ -102,7 +103,6 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
     if (showingImages.length === 0) {
         return <p>No images available</p>
     } else {
-
         return (<>
             <Title />
             < Row className={styles.images} >

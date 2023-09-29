@@ -24,6 +24,7 @@ export default function RootLayout({
           <Header />
           {children}
         </ContextProvider>
+        {/* Client components nested inside the server component */}
       </body>
     </html>
   )

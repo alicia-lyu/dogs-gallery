@@ -1,12 +1,12 @@
 import styles from './page.module.css'
-import BreedCard from '@/components/breedCard'
+import BreedCard from '@/app/breedCard'
 
 export default async function Home() {
   const response = await fetch("https://dog.ceo/api/breeds/list/all")
+  // server-side fetching
   const data = await response.json()
   const message = data.message ?? {}
   const breeds = message as { [breed: string]: string[] }
-  console.log(breeds)
 
   return (
     <main className={styles.main}>

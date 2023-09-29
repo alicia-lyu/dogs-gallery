@@ -26,11 +26,11 @@ export default function BreedCard({ breed, subBreeds }: {
                 }
             })
         }
-        console.log(selected)
     }
 
     function handleCardClick(event: React.MouseEvent<HTMLDivElement>) {
         subBreeds.length === 0 && handleClick(event)
+        // if there are subbreeds, user must click on the checkbox
     }
 
     return <Card className={`${galleryStyles.breedCard}`} onClick={handleCardClick} data-breed={breed}>
@@ -118,10 +118,6 @@ function SubBreed({ breed, subBreed }: { breed: string, subBreed: string }) {
         setChecked(selected[breed]?.includes(subBreed) ?? false)
     }, [selected, breed, subBreed])
 
-    useEffect(() => {
-        // console.log("Context re-rendered", selected)
-    }, [selected])
-
     function handleCheckedChange(event: React.ChangeEvent<HTMLInputElement>) {
         setChecked(event.target.checked)
     }
@@ -129,10 +125,6 @@ function SubBreed({ breed, subBreed }: { breed: string, subBreed: string }) {
     function handleClick(event: React.MouseEvent<HTMLInputElement>) {
         if (checked) {
             setSelected(prev => {
-                console.log("setSelected, new state: ", {
-                    ...prev,
-                    [breed]: prev[breed].filter(sub => sub !== subBreed)
-                })
                 return {
                     ...prev,
                     [breed]: prev[breed].filter(sub => sub !== subBreed)
@@ -147,7 +139,6 @@ function SubBreed({ breed, subBreed }: { breed: string, subBreed: string }) {
                 }
             })
         }
-        console.log("handleClick", selected)
     }
     return <li className={galleryStyles.subBreed}>
         <input type="checkbox" checked={checked} onChange={handleCheckedChange} onClick={handleClick} />
