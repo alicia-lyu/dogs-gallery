@@ -23,6 +23,7 @@ function FavoriteBreed({ breed, subBreeds }: {
     subBreeds: string[],
 }) {
     const [breedImages, setBreedImages] = useState<string[]>([])
+    
     useEffect(() => {
         fetch(`http://localhost:3000/api/${breed}`).then(response => {
             response.json().then(data => {
@@ -33,10 +34,22 @@ function FavoriteBreed({ breed, subBreeds }: {
     const [showingImageRange, setShowingImageRange] = useState<number[]>([0, 4])
 
     function handleLoadingError(event: React.SyntheticEvent<HTMLImageElement, Event>) {
+        const target = event.target as HTMLImageElement
+        if (target.dataset.index) {
+            const index = parseInt(target.dataset.index)
+            console.log("Loading error in favorites page with image", breed, index+showingImageRange[0], "Igoring...")
+            setBreedImages(prev => {
+                return prev.filter((image, i) => i !== index+showingImageRange[0])
+            })
+        }
     }
 
     if (subBreeds.length > 0) {
-
+        <Container>
+            <h2 className={`${styles.breed}`}>
+                <span>{breed}</span>
+            </h2>
+        </Container>
     } else {
         return <Container>
             <h2 className={`${styles.breed}`}>
@@ -44,8 +57,8 @@ function FavoriteBreed({ breed, subBreeds }: {
                 <FiRefreshCcw />
             </h2>
             <Row>
-                {breedImages.slice(showingImageRange[0], showingImageRange[1]).map(image => {
-                    return <Col sm={6} lg={3} key={breed} className={styles.image}>
+                {breedImages.slice(showingImageRange[0], showingImageRange[1]).map((image, index) => {
+                    return <Col sm={6} lg={3} key={image} className={styles.image}>
                         <Image
                             src={image}
                             alt={breed}
@@ -59,6 +72,7 @@ function FavoriteBreed({ breed, subBreeds }: {
                             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNMTEqsBwAD9QGlWtP07gAAAABJRU5ErkJggg=="
                             placeholder="blur"
                             loading="lazy"
+                            data-index={index}
                             onError={handleLoadingError}
                         />
                     </Col>

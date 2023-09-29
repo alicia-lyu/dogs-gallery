@@ -70,7 +70,7 @@ function DogImage({ breed }: { breed: string }) {
     }, [breed])
 
     function handleLoadingError(event: React.SyntheticEvent<HTMLImageElement, Event>) {
-        console.log("Loading error with image", breed, breedImageIndex, breedImage, "Trying the next one...")
+        console.log("Loading error in gallery page with image", breed, breedImageIndex, breedImage, "Trying the next one...")
         setBreedImageIndex(prev => (prev + 1))
         // if index > length, then set index to larger than length, so IMAGE_NOT_AVAILABLE_URL will be assigned
     }
