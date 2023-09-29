@@ -2,6 +2,20 @@
     margin-right: 0.5em;
 }
 
+.subBreed > * {
+    margin-right: 0.5em;
+}
+
+.subBreedBlock {
+    border-left: 2px solid #ccc;
+    padding-left: 1em;
+    margin-bottom: 1em;
+}
+
 .image {
     padding: 0.5em;
+}
+
+.images {
+    margin: 0;
 }

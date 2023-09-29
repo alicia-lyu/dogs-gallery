@@ -18,25 +18,60 @@ export default function Favorites() {
     </main>
 }
 
-interface SubBreedsImages {
-    [subBreed: string]: string[]
-}
-
 function FavoriteBreed({ breed, subBreeds }: {
     breed: string,
     subBreeds: string[],
 }) {
+    if (subBreeds.length > 0) {
+        return <Container>
+            <h2 className={`${styles.breed}`}>
+                <span>{breed}</span>
+            </h2>
+            {subBreeds.map(subBreed => {
+                return <div key={subBreed} className={styles.subBreedBlock}>
+                    <h3 className={`${styles.subBreed}`}>
+                        <span>{subBreed}</span>
+                        <FiRefreshCcw />
+                    </h3>
+                    <BreedImages
+                        breed={breed}
+                        subBreed={subBreed}
+                    />
+                </div>
+            })}
+        </Container>
+    } else {
+        return <Container>
+            <h2 className={`${styles.breed}`}>
+                <span>{breed}</span>
+                <FiRefreshCcw />
+            </h2>
+            <BreedImages
+                breed={breed}
+            />
+        </Container>
+    }
+}
+
+function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) {
+    const [showingImageRange, setShowingImageRange] = useState<number[]>([0, 4])
     const [breedImages, setBreedImages] = useState<string[]>([])
-    const [subBreedsImages, setSubBreedImages] = useState<SubBreedsImages>({})
 
     useEffect(() => {
-        fetch(`http://localhost:3000/api/${breed}`).then(response => {
-            response.json().then(data => {
-                setBreedImages(data.message)
+        if (subBreed === undefined) {
+            fetch(`http://localhost:3000/api/${breed}`).then(response => {
+                response.json().then(data => {
+                    setBreedImages(data.message)
+                })
             })
-        })
-    }, [breed])
-    const [showingImageRange, setShowingImageRange] = useState<number[]>([0, 4])
+        } else {
+            fetch(`http://localhost:3000/api/${breed}/${subBreed}`).then(response => {
+                response.json().then(data => {
+                    setBreedImages(data.message)
+                })
+            })
+        }
+    }, [breed, subBreed])
 
     function handleLoadingError(event: React.SyntheticEvent<HTMLImageElement, Event>) {
         const target = event.target as HTMLImageElement
@@ -49,39 +84,9 @@ function FavoriteBreed({ breed, subBreeds }: {
         }
     }
 
-    if (subBreeds.length > 0) {
-        return <Container>
-            <h2 className={`${styles.breed}`}>
-                <span>{breed}</span>
-            </h2>
-            {subBreeds.map(subBreed => {
-                return <h3 className={`${styles.breed}`} key={subBreed}>
-                    <span>{subBreed}</span>
-                    <FiRefreshCcw />
-                </h3>
-            })}
-        </Container>
-    } else {
-        return <Container>
-            <h2 className={`${styles.breed}`}>
-                <span>{breed}</span>
-                <FiRefreshCcw />
-            </h2>
-            <Row>
-                <BreedImages
-                    images={breedImages.slice(showingImageRange[0], showingImageRange[1])}
-                    breed={breed}
-                    handleLoadingError={handleLoadingError}
-                />
-            </Row>
-        </Container>
-    }
-}
-
-function BreedImages({ images, breed, handleLoadingError }: { images: string[], breed: string, handleLoadingError: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void }) {
-    return (<>
+    return (<Row className={styles.images}>
         {
-            images.map((image, index) => {
+            breedImages.slice(showingImageRange[0], showingImageRange[1]).map((image, index) => {
                 return <Col sm={6} lg={3} key={image} className={styles.image}>
                     <Image
                         src={image}
@@ -102,5 +107,5 @@ function BreedImages({ images, breed, handleLoadingError }: { images: string[], 
                 </Col>
             })
         }
-    </>)
+    </Row>)
 }
