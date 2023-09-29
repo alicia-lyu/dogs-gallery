@@ -19,3 +19,9 @@
 .images {
     margin: 0;
 }
+
+.refresh {
+    border: none;
+    background-color: transparent;
+    color: rgba(0, 0, 0, 0.5)
+}

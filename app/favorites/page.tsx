@@ -90,12 +90,12 @@ function BreedImages({ breed, subBreed }: { breed: string, subBreed?: string }) 
         if (subBreed) {
             return <h3 className={`${styles.subBreed}`}>
                 <span>{subBreed}</span>
-                <a href="#" onClick={handleRefresh}><FiRefreshCcw/></a>
+                <button onClick={handleRefresh} className={styles.refresh}><FiRefreshCcw/></button>
             </h3>
         } else {
             return <h2 className={`${styles.breed}`}>
                 <span>{breed}</span>
-                <a href="#" onClick={handleRefresh}><FiRefreshCcw/></a>
+                <button onClick={handleRefresh} className={styles.refresh}><FiRefreshCcw/></button>
             </h2>
         }
     })
